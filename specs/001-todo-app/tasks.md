@@ -22,11 +22,11 @@ description: "Task list for TODO App feature implementation"
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create backend project structure: backend/app/__init__.py, backend/app/main.py, backend/tests/__init__.py, backend/tests/conftest.py
-- [ ] T002 Create backend/pyproject.toml with mypy strict, ruff, pytest configuration
-- [ ] T003 Create backend/requirements.txt with fastapi, uvicorn, aiosqlite, pydantic, structlog, httpx, pytest, pytest-asyncio dependencies
-- [ ] T004 [P] Initialize frontend Next.js project in frontend/ with TypeScript configuration
-- [ ] T005 [P] Create .gitignore with backend/todo.db, __pycache__, .venv, node_modules, .next
+- [x] T001 Create backend project structure: backend/app/__init__.py, backend/app/main.py, backend/tests/__init__.py, backend/tests/conftest.py
+- [x] T002 Create backend/pyproject.toml with mypy strict, ruff, pytest configuration
+- [x] T003 Create backend/requirements.txt with fastapi, uvicorn, aiosqlite, pydantic, structlog, httpx, pytest, pytest-asyncio dependencies
+- [x] T004 [P] Initialize frontend Next.js project in frontend/ with TypeScript configuration
+- [x] T005 [P] Create .gitignore with backend/todo.db, __pycache__, .venv, node_modules, .next
 
 ---
 
@@ -36,12 +36,12 @@ description: "Task list for TODO App feature implementation"
 
 **CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T006 Implement database connection manager and TODO table initialization (id, title, completed, created_at, updated_at with completed index) in backend/app/database.py
-- [ ] T007 Define Pydantic request/response models (TodoCreate, TodoUpdate, TodoResponse, TodoListResponse) in backend/app/models.py
-- [ ] T008 Configure structlog with JSON output and request_id middleware in backend/app/logging_config.py
-- [ ] T009 Setup FastAPI app with CORS (localhost:3000), lifespan event for DB init, and logging middleware in backend/app/main.py
-- [ ] T010 [P] Create pytest fixtures (async test client, test database, cleanup) in backend/tests/conftest.py
-- [ ] T011 [P] Create API client module for FastAPI communication (base URL, fetch/post/patch/delete helpers) in frontend/src/lib/api.ts
+- [x] T006 Implement database connection manager and TODO table initialization (id, title, completed, created_at, updated_at with completed index) in backend/app/database.py
+- [x] T007 Define Pydantic request/response models (TodoCreate, TodoUpdate, TodoResponse, TodoListResponse) in backend/app/models.py
+- [x] T008 Configure structlog with JSON output and request_id middleware in backend/app/logging_config.py
+- [x] T009 Setup FastAPI app with CORS (localhost:3000), lifespan event for DB init, and logging middleware in backend/app/main.py
+- [x] T010 [P] Create pytest fixtures (async test client, test database, cleanup) in backend/tests/conftest.py
+- [x] T011 [P] Create API client module for FastAPI communication (base URL, fetch/post/patch/delete helpers) in frontend/src/lib/api.ts
 
 **Checkpoint**: Foundation ready - user story implementation can now begin
 
@@ -55,21 +55,21 @@ description: "Task list for TODO App feature implementation"
 
 ### Tests for User Story 1 (TDD - write FIRST, ensure they FAIL)
 
-- [ ] T012 [P] [US1] Write Pydantic model validation tests (title required, max 200 chars, empty string rejection, whitespace-only rejection) in backend/tests/test_models.py
-- [ ] T013 [P] [US1] Write API tests for POST /api/todos (create with valid title, reject empty title, reject 201+ char title) in backend/tests/test_routes.py
-- [ ] T014 [P] [US1] Write API tests for GET /api/todos (list all todos, empty list response) in backend/tests/test_routes.py
-- [ ] T015 [P] [US1] Write API tests for PATCH /api/todos/{id} (update title, 404 for non-existent) in backend/tests/test_routes.py
-- [ ] T016 [P] [US1] Write API tests for DELETE /api/todos/{id} (delete existing, 404 for non-existent) in backend/tests/test_routes.py
+- [x] T012 [P] [US1] Write Pydantic model validation tests (title required, max 200 chars, empty string rejection, whitespace-only rejection) in backend/tests/test_models.py
+- [x] T013 [P] [US1] Write API tests for POST /api/todos (create with valid title, reject empty title, reject 201+ char title) in backend/tests/test_routes.py
+- [x] T014 [P] [US1] Write API tests for GET /api/todos (list all todos, empty list response) in backend/tests/test_routes.py
+- [x] T015 [P] [US1] Write API tests for PATCH /api/todos/{id} (update title, 404 for non-existent) in backend/tests/test_routes.py
+- [x] T016 [P] [US1] Write API tests for DELETE /api/todos/{id} (delete existing, 404 for non-existent) in backend/tests/test_routes.py
 
 ### Implementation for User Story 1
 
-- [ ] T017 [US1] Implement CRUD database operations (create, get_all, get_by_id, update, delete) in backend/app/database.py
-- [ ] T018 [US1] Implement API routes for POST /api/todos, GET /api/todos, PATCH /api/todos/{id}, DELETE /api/todos/{id} in backend/app/routes.py
-- [ ] T019 [US1] Register routes in FastAPI app and verify all US1 tests pass in backend/app/main.py
-- [ ] T020 [US1] Create TodoForm component (title input, submit button, empty validation error display) in frontend/src/components/TodoForm.tsx
-- [ ] T021 [US1] Create TodoItem component (title display, inline edit on click, delete button with confirmation dialog) in frontend/src/components/TodoItem.tsx
-- [ ] T022 [US1] Create TodoList component (fetch and render todo list, empty state message) in frontend/src/components/TodoList.tsx
-- [ ] T023 [US1] Integrate components in main page (TodoForm + TodoList, state management) in frontend/src/app/page.tsx
+- [x] T017 [US1] Implement CRUD database operations (create, get_all, get_by_id, update, delete) in backend/app/database.py
+- [x] T018 [US1] Implement API routes for POST /api/todos, GET /api/todos, PATCH /api/todos/{id}, DELETE /api/todos/{id} in backend/app/routes.py
+- [x] T019 [US1] Register routes in FastAPI app and verify all US1 tests pass in backend/app/main.py
+- [x] T020 [US1] Create TodoForm component (title input, submit button, empty validation error display) in frontend/src/components/TodoForm.tsx
+- [x] T021 [US1] Create TodoItem component (title display, inline edit on click, delete button with confirmation dialog) in frontend/src/components/TodoItem.tsx
+- [x] T022 [US1] Create TodoList component (fetch and render todo list, empty state message) in frontend/src/components/TodoList.tsx
+- [x] T023 [US1] Integrate components in main page (TodoForm + TodoList, state management) in frontend/src/app/page.tsx
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -83,15 +83,15 @@ description: "Task list for TODO App feature implementation"
 
 ### Tests for User Story 2 (TDD - write FIRST, ensure they FAIL)
 
-- [ ] T024 [P] [US2] Write API tests for PATCH /api/todos/{id} with completed toggle (true→false, false→true) in backend/tests/test_routes.py
-- [ ] T025 [P] [US2] Write API tests for GET /api/todos?status=completed, status=active, status=all filtering in backend/tests/test_routes.py
+- [x] T024 [P] [US2] Write API tests for PATCH /api/todos/{id} with completed toggle (true→false, false→true) in backend/tests/test_routes.py
+- [x] T025 [P] [US2] Write API tests for GET /api/todos?status=completed, status=active, status=all filtering in backend/tests/test_routes.py
 
 ### Implementation for User Story 2
 
-- [ ] T026 [US2] Add status query parameter filtering logic to GET /api/todos in backend/app/routes.py
-- [ ] T027 [US2] Add completion toggle checkbox (completed state visual distinction with strikethrough) to TodoItem in frontend/src/components/TodoItem.tsx
-- [ ] T028 [US2] Create TodoFilter component (All/Active/Completed filter buttons) in frontend/src/components/TodoFilter.tsx
-- [ ] T029 [US2] Integrate TodoFilter into main page and connect filter state to API calls in frontend/src/app/page.tsx
+- [x] T026 [US2] Add status query parameter filtering logic to GET /api/todos in backend/app/routes.py
+- [x] T027 [US2] Add completion toggle checkbox (completed state visual distinction with strikethrough) to TodoItem in frontend/src/components/TodoItem.tsx
+- [x] T028 [US2] Create TodoFilter component (All/Active/Completed filter buttons) in frontend/src/components/TodoFilter.tsx
+- [x] T029 [US2] Integrate TodoFilter into main page and connect filter state to API calls in frontend/src/app/page.tsx
 
 **Checkpoint**: All user stories should now be independently functional
 
@@ -101,10 +101,10 @@ description: "Task list for TODO App feature implementation"
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T030 Run mypy --strict on backend/ and fix all type errors
-- [ ] T031 [P] Run ruff check and ruff format on backend/ and fix all lint/format issues
-- [ ] T032 [P] Add frontend layout with app title and basic styling in frontend/src/app/layout.tsx
-- [ ] T033 Run quickstart.md verification steps (all 7 steps) end-to-end
+- [x] T030 Run mypy --strict on backend/ and fix all type errors
+- [x] T031 [P] Run ruff check and ruff format on backend/ and fix all lint/format issues
+- [x] T032 [P] Add frontend layout with app title and basic styling in frontend/src/app/layout.tsx
+- [x] T033 Run quickstart.md verification steps (all 7 steps) end-to-end
 
 ---
 
