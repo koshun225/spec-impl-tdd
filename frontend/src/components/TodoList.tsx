@@ -17,9 +17,7 @@ export default function TodoList({ todos, onUpdated, onDeleted }: TodoListProps)
   return (
     <ul>
       {todos.map((todo) => (
-        <li key={todo.id}>
-          <TodoItem todo={todo} onUpdated={onUpdated} onDeleted={onDeleted} />
-        </li>
+        <TodoItem key={todo.id} todo={todo} onUpdated={onUpdated} onDeleted={onDeleted} />
       ))}
     </ul>
   );
