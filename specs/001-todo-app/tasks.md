@@ -36,7 +36,7 @@ description: "Task list for TODO App feature implementation"
 
 **CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T006 Implement database connection manager and TODO table initialization (id, title, completed, created_at, updated_at with completed index) in backend/app/database.py
+- [x] T006 Implement database connection manager and TODO table initialization (id, title, completed, created_at, updated_at with completed index) in backend/app/database.py
 - [ ] T007 Define Pydantic request/response models (TodoCreate, TodoUpdate, TodoResponse, TodoListResponse) in backend/app/models.py
 - [ ] T008 Configure structlog with JSON output and request_id middleware in backend/app/logging_config.py
 - [ ] T009 Setup FastAPI app with CORS (localhost:3000), lifespan event for DB init, and logging middleware in backend/app/main.py
