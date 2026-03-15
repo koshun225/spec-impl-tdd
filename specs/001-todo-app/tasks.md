@@ -67,7 +67,7 @@ description: "Task list for TODO App feature implementation"
 - [x] T018 [US1] Implement API routes for POST /api/todos, GET /api/todos, PATCH /api/todos/{id}, DELETE /api/todos/{id} in backend/app/routes.py
 - [x] T019 [US1] Register routes in FastAPI app and verify all US1 tests pass in backend/app/main.py
 - [x] T020 [US1] Create TodoForm component (title input, submit button, empty validation error display) in frontend/src/components/TodoForm.tsx
-- [ ] T021 [US1] Create TodoItem component (title display, inline edit on click, delete button with confirmation dialog) in frontend/src/components/TodoItem.tsx
+- [x] T021 [US1] Create TodoItem component (title display, inline edit on click, delete button with confirmation dialog) in frontend/src/components/TodoItem.tsx
 - [ ] T022 [US1] Create TodoList component (fetch and render todo list, empty state message) in frontend/src/components/TodoList.tsx
 - [ ] T023 [US1] Integrate components in main page (TodoForm + TodoList, state management) in frontend/src/app/page.tsx
 
