@@ -22,11 +22,11 @@ description: "Task list for TODO App feature implementation"
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create backend project structure: backend/app/__init__.py, backend/app/main.py, backend/tests/__init__.py, backend/tests/conftest.py
-- [ ] T002 Create backend/pyproject.toml with mypy strict, ruff, pytest configuration
-- [ ] T003 Create backend/requirements.txt with fastapi, uvicorn, aiosqlite, pydantic, structlog, httpx, pytest, pytest-asyncio dependencies
-- [ ] T004 [P] Initialize frontend Next.js project in frontend/ with TypeScript configuration
-- [ ] T005 [P] Create .gitignore with backend/todo.db, __pycache__, .venv, node_modules, .next
+- [x] T001 Create backend project structure: backend/app/__init__.py, backend/app/main.py, backend/tests/__init__.py, backend/tests/conftest.py
+- [x] T002 Create backend/pyproject.toml with mypy strict, ruff, pytest configuration
+- [x] T003 Create backend/requirements.txt with fastapi, uvicorn, aiosqlite, pydantic, structlog, httpx, pytest, pytest-asyncio dependencies
+- [x] T004 [P] Initialize frontend Next.js project in frontend/ with TypeScript configuration
+- [x] T005 [P] Create .gitignore with backend/todo.db, __pycache__, .venv, node_modules, .next
 
 ---
 
