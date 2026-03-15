@@ -2,14 +2,14 @@
 
 from __future__ import annotations
 
-from contextlib import asynccontextmanager
 from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.database import init_db, close_db
-from app.logging_config import setup_logging, RequestIdMiddleware
+from app.database import close_db, init_db
+from app.logging_config import RequestIdMiddleware, setup_logging
 from app.routes import router
 
 

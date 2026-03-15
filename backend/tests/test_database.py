@@ -17,7 +17,6 @@ import pytest
 
 from app.database import close_db, get_connection, init_db
 
-
 # ---------------------------------------------------------------------------
 # Table Creation & Schema Tests
 # ---------------------------------------------------------------------------

@@ -10,6 +10,7 @@ from starlette.requests import Request
 from starlette.responses import Response
 from structlog.contextvars import bind_contextvars, clear_contextvars
 
+
 def setup_logging() -> None:
     """Configure structlog globally with JSON output.
 

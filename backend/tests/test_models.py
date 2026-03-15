@@ -10,13 +10,12 @@ Verifies the contract specifications from contracts/api.md and data-model.md:
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 from pydantic import ValidationError
 
 from app.models import TodoCreate, TodoListResponse, TodoResponse, TodoUpdate
-
 
 # ---------------------------------------------------------------------------
 # TodoCreate Tests
@@ -206,8 +205,8 @@ class TestTodoResponse:
             "id": 1,
             "title": "Test todo",
             "completed": False,
-            "created_at": datetime(2026, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-            "updated_at": datetime(2026, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
+            "created_at": datetime(2026, 1, 1, 12, 0, 0, tzinfo=UTC),
+            "updated_at": datetime(2026, 1, 1, 12, 0, 0, tzinfo=UTC),
         }
         defaults.update(overrides)
         return TodoResponse(**defaults)
@@ -235,13 +234,13 @@ class TestTodoResponse:
 
     def test_created_at_is_datetime(self) -> None:
         """created_at field must be a datetime."""
-        now = datetime(2026, 3, 15, 10, 30, 0, tzinfo=timezone.utc)
+        now = datetime(2026, 3, 15, 10, 30, 0, tzinfo=UTC)
         model = self._make_response(created_at=now)
         assert model.created_at == now
 
     def test_updated_at_is_datetime(self) -> None:
         """updated_at field must be a datetime."""
-        now = datetime(2026, 3, 15, 10, 30, 0, tzinfo=timezone.utc)
+        now = datetime(2026, 3, 15, 10, 30, 0, tzinfo=UTC)
         model = self._make_response(updated_at=now)
         assert model.updated_at == now
 
@@ -249,7 +248,13 @@ class TestTodoResponse:
         """model_dump should include all five fields."""
         model = self._make_response()
         data = model.model_dump()
-        assert set(data.keys()) == {"id", "title", "completed", "created_at", "updated_at"}
+        assert set(data.keys()) == {
+            "id",
+            "title",
+            "completed",
+            "created_at",
+            "updated_at",
+        }
 
     def test_missing_id_raises_error(self) -> None:
         """Omitting id should raise a validation error."""
@@ -257,8 +262,8 @@ class TestTodoResponse:
             TodoResponse(
                 title="Test",
                 completed=False,
-                created_at=datetime.now(tz=timezone.utc),
-                updated_at=datetime.now(tz=timezone.utc),
+                created_at=datetime.now(tz=UTC),
+                updated_at=datetime.now(tz=UTC),
             )  # type: ignore[call-arg]
 
     def test_missing_title_raises_error(self) -> None:
@@ -267,8 +272,8 @@ class TestTodoResponse:
             TodoResponse(
                 id=1,
                 completed=False,
-                created_at=datetime.now(tz=timezone.utc),
-                updated_at=datetime.now(tz=timezone.utc),
+                created_at=datetime.now(tz=UTC),
+                updated_at=datetime.now(tz=UTC),
             )  # type: ignore[call-arg]
 
     def test_missing_completed_raises_error(self) -> None:
@@ -277,8 +282,8 @@ class TestTodoResponse:
             TodoResponse(
                 id=1,
                 title="Test",
-                created_at=datetime.now(tz=timezone.utc),
-                updated_at=datetime.now(tz=timezone.utc),
+                created_at=datetime.now(tz=UTC),
+                updated_at=datetime.now(tz=UTC),
             )  # type: ignore[call-arg]
 
     def test_missing_created_at_raises_error(self) -> None:
@@ -288,7 +293,7 @@ class TestTodoResponse:
                 id=1,
                 title="Test",
                 completed=False,
-                updated_at=datetime.now(tz=timezone.utc),
+                updated_at=datetime.now(tz=UTC),
             )  # type: ignore[call-arg]
 
     def test_missing_updated_at_raises_error(self) -> None:
@@ -298,7 +303,7 @@ class TestTodoResponse:
                 id=1,
                 title="Test",
                 completed=False,
-                created_at=datetime.now(tz=timezone.utc),
+                created_at=datetime.now(tz=UTC),
             )  # type: ignore[call-arg]
 
 
@@ -318,7 +323,7 @@ class TestTodoListResponse:
 
     def test_list_with_items(self) -> None:
         """A list with TodoResponse items should be valid."""
-        now = datetime(2026, 1, 1, 12, 0, 0, tzinfo=timezone.utc)
+        now = datetime(2026, 1, 1, 12, 0, 0, tzinfo=UTC)
         todo = TodoResponse(
             id=1,
             title="Test",
@@ -333,9 +338,11 @@ class TestTodoListResponse:
 
     def test_multiple_items(self) -> None:
         """A list with multiple TodoResponse items should be valid."""
-        now = datetime(2026, 1, 1, 12, 0, 0, tzinfo=timezone.utc)
+        now = datetime(2026, 1, 1, 12, 0, 0, tzinfo=UTC)
         todos = [
-            TodoResponse(id=i, title=f"Todo {i}", completed=False, created_at=now, updated_at=now)
+            TodoResponse(
+                id=i, title=f"Todo {i}", completed=False, created_at=now, updated_at=now
+            )
             for i in range(1, 4)
         ]
         model = TodoListResponse(todos=todos, total=3)
@@ -361,7 +368,7 @@ class TestTodoListResponse:
 
     def test_todos_contains_todo_response_objects(self) -> None:
         """Items in the todos list should be TodoResponse instances."""
-        now = datetime(2026, 1, 1, 12, 0, 0, tzinfo=timezone.utc)
+        now = datetime(2026, 1, 1, 12, 0, 0, tzinfo=UTC)
         todo = TodoResponse(
             id=1,
             title="Test",

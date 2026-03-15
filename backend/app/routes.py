@@ -4,8 +4,13 @@ from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException, Response
 
-from app.database import create_todo, get_all_todos, get_todo_by_id, update_todo, delete_todo
-from app.models import TodoCreate, TodoUpdate, TodoResponse, TodoListResponse
+from app.database import (
+    create_todo,
+    delete_todo,
+    get_all_todos,
+    update_todo,
+)
+from app.models import TodoCreate, TodoListResponse, TodoResponse, TodoUpdate
 
 router = APIRouter(prefix="/api")
 

@@ -140,7 +140,10 @@ class TestCORSMiddleware:
                     "Access-Control-Request-Method": "GET",
                 },
             )
-        assert response.headers.get("access-control-allow-origin") != "http://evil.example.com"
+        assert (
+            response.headers.get("access-control-allow-origin")
+            != "http://evil.example.com"
+        )
 
 
 # ---------------------------------------------------------------------------

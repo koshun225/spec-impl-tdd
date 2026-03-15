@@ -10,12 +10,8 @@ Verifies the contract specifications from plan.md and constitution:
 
 from __future__ import annotations
 
-import json
 import uuid
-from io import StringIO
-from unittest.mock import patch
 
-import pytest
 import structlog
 from starlette.applications import Starlette
 from starlette.requests import Request
@@ -24,7 +20,6 @@ from starlette.routing import Route
 from starlette.testclient import TestClient
 
 from app.logging_config import RequestIdMiddleware, setup_logging
-
 
 # ---------------------------------------------------------------------------
 # setup_logging Tests
@@ -57,28 +52,14 @@ class TestSetupLogging:
     def test_structlog_produces_json_output(self) -> None:
         """After setup_logging, log output should be valid JSON."""
         setup_logging()
-        output = StringIO()
 
-        # Configure a logger that writes to our StringIO
-        logger = structlog.get_logger()
-
-        # We need to capture the output; use structlog's PrintLogger or
-        # redirect. The implementation should use JSONRenderer.
         # We test by checking the configured processors include JSON rendering.
         config = structlog.get_config()
         processors = config.get("processors", [])
-
-        # There should be a JSON renderer in the processor chain
-        processor_names = [
-            type(p).__name__ if not callable(p) or hasattr(p, "__name__") is False
-            else getattr(p, "__name__", type(p).__name__)
-            for p in processors
-        ]
         processor_classes = [type(p).__name__ for p in processors]
 
         json_renderer_found = any(
-            "JSON" in name or "json" in name
-            for name in processor_classes
+            "JSON" in name or "json" in name for name in processor_classes
         )
         assert json_renderer_found, (
             f"Expected a JSON renderer in structlog processors. "
@@ -108,9 +89,7 @@ class TestSetupLogging:
         config = structlog.get_config()
         processors = config.get("processors", [])
         processor_classes = [type(p).__name__ for p in processors]
-        processor_func_names = [
-            getattr(p, "__name__", "") for p in processors
-        ]
+        processor_func_names = [getattr(p, "__name__", "") for p in processors]
 
         # Look for add_log_level or similar
         log_level_found = any(
@@ -236,7 +215,6 @@ class TestRequestIdMiddleware:
         log_output: list[dict] = []
 
         # Capture structlog output
-        original_processors = structlog.get_config().get("processors", [])
 
         def capture_processor(
             logger: object, method_name: str, event_dict: dict
@@ -266,7 +244,7 @@ class TestRequestIdMiddleware:
         )
 
     def test_request_id_in_log_matches_response_header(self) -> None:
-        """The request_id in log context should match the X-Request-ID response header."""
+        """The request_id in log context should match X-Request-ID header."""
         app = _make_test_app(log_request_id=True)
         client = TestClient(app)
 
@@ -328,6 +306,7 @@ class TestRequestIdMiddleware:
 
     def test_middleware_works_with_post_requests(self) -> None:
         """The middleware should work with POST (and other) HTTP methods."""
+
         async def post_handler(request: Request) -> PlainTextResponse:
             return PlainTextResponse("created", status_code=201)
 

@@ -15,10 +15,8 @@ import os
 from pathlib import Path
 
 import httpx
-import pytest
 
 from app.main import app
-
 
 # ---------------------------------------------------------------------------
 # test_db_path fixture tests
@@ -174,9 +172,7 @@ class TestDatabaseIsolation:
     Data written in one test must not be visible in another test.
     """
 
-    async def test_db_isolation_write(
-        self, async_client: httpx.AsyncClient
-    ) -> None:
+    async def test_db_isolation_write(self, async_client: httpx.AsyncClient) -> None:
         """Write data via the API. The next test should not see this data.
 
         This test creates a todo item. If isolation is working correctly,
@@ -192,9 +188,7 @@ class TestDatabaseIsolation:
         # during Red Team phase since routes may not be implemented yet.
         assert response.status_code in (201, 404, 405, 422)
 
-    async def test_db_isolation_read(
-        self, async_client: httpx.AsyncClient
-    ) -> None:
+    async def test_db_isolation_read(self, async_client: httpx.AsyncClient) -> None:
         """Read data via the API. Should see an empty database.
 
         If isolation is correct, the item created in test_db_isolation_write
@@ -246,8 +240,7 @@ class TestDatabaseSetupViaClient:
 
         async with aiosqlite.connect(test_db_path) as db:
             cursor = await db.execute(
-                "SELECT name FROM sqlite_master "
-                "WHERE type='table' AND name='todos'"
+                "SELECT name FROM sqlite_master WHERE type='table' AND name='todos'"
             )
             row = await cursor.fetchone()
             assert row is not None, (

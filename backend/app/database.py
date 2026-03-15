@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import os
+from datetime import UTC
 from pathlib import Path
 from typing import Any
 
@@ -86,14 +86,15 @@ async def close_db() -> None:
 
 async def create_todo(title: str) -> dict[str, Any]:
     """Insert a new todo into the database and return it as a dict."""
-    from datetime import datetime, timezone
+    from datetime import datetime
 
-    now = datetime.now(timezone.utc).isoformat()
+    now = datetime.now(UTC).isoformat()
     conn = await get_connection()
-    cursor = await conn.execute(
-        "INSERT INTO todos (title, completed, created_at, updated_at) VALUES (?, ?, ?, ?)",
-        (title, False, now, now),
+    sql = (
+        "INSERT INTO todos (title, completed, created_at, updated_at)"
+        " VALUES (?, ?, ?, ?)"
     )
+    cursor = await conn.execute(sql, (title, False, now, now))
     await conn.commit()
     todo_id = cursor.lastrowid
     return {
@@ -108,18 +109,13 @@ async def create_todo(title: str) -> dict[str, Any]:
 async def get_all_todos(status: str = "all") -> list[dict[str, Any]]:
     """Select todos from the database with optional status filter."""
     conn = await get_connection()
+    cols = "id, title, completed, created_at, updated_at"
     if status == "active":
-        cursor = await conn.execute(
-            "SELECT id, title, completed, created_at, updated_at FROM todos WHERE completed = 0"
-        )
+        cursor = await conn.execute(f"SELECT {cols} FROM todos WHERE completed = 0")
     elif status == "completed":
-        cursor = await conn.execute(
-            "SELECT id, title, completed, created_at, updated_at FROM todos WHERE completed = 1"
-        )
+        cursor = await conn.execute(f"SELECT {cols} FROM todos WHERE completed = 1")
     else:
-        cursor = await conn.execute(
-            "SELECT id, title, completed, created_at, updated_at FROM todos"
-        )
+        cursor = await conn.execute(f"SELECT {cols} FROM todos")
     rows = await cursor.fetchall()
     return [
         {
@@ -152,9 +148,11 @@ async def get_todo_by_id(todo_id: int) -> dict[str, Any] | None:
     }
 
 
-async def update_todo(todo_id: int, title: str | None, completed: bool | None) -> dict[str, Any] | None:
+async def update_todo(
+    todo_id: int, title: str | None, completed: bool | None
+) -> dict[str, Any] | None:
     """Update a todo's fields and return the updated row, or None if not found."""
-    from datetime import datetime, timezone
+    from datetime import datetime
 
     existing = await get_todo_by_id(todo_id)
     if existing is None:
@@ -162,7 +160,7 @@ async def update_todo(todo_id: int, title: str | None, completed: bool | None) -
 
     new_title = title if title is not None else existing["title"]
     new_completed = completed if completed is not None else existing["completed"]
-    now = datetime.now(timezone.utc).isoformat()
+    now = datetime.now(UTC).isoformat()
 
     conn = await get_connection()
     await conn.execute(

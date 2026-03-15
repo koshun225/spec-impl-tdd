@@ -6,7 +6,6 @@ Provides async test database setup and cleanup fixtures.
 from __future__ import annotations
 
 import os
-import tempfile
 from collections.abc import AsyncGenerator
 from pathlib import Path
 
@@ -50,6 +49,8 @@ async def async_client(test_db_path: str) -> AsyncGenerator[httpx.AsyncClient, N
     """
     await init_db(test_db_path)
     transport = httpx.ASGITransport(app=app)
-    async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
+    async with httpx.AsyncClient(
+        transport=transport, base_url="http://testserver"
+    ) as client:
         yield client
     await close_db()
