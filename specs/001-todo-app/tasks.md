@@ -83,12 +83,12 @@ description: "Task list for TODO App feature implementation"
 
 ### Tests for User Story 2 (TDD - write FIRST, ensure they FAIL)
 
-- [ ] T024 [P] [US2] Write API tests for PATCH /api/todos/{id} with completed toggle (true→false, false→true) in backend/tests/test_routes.py
-- [ ] T025 [P] [US2] Write API tests for GET /api/todos?status=completed, status=active, status=all filtering in backend/tests/test_routes.py
+- [x] T024 [P] [US2] Write API tests for PATCH /api/todos/{id} with completed toggle (true→false, false→true) in backend/tests/test_routes.py
+- [x] T025 [P] [US2] Write API tests for GET /api/todos?status=completed, status=active, status=all filtering in backend/tests/test_routes.py
 
 ### Implementation for User Story 2
 
-- [ ] T026 [US2] Add status query parameter filtering logic to GET /api/todos in backend/app/routes.py
+- [x] T026 [US2] Add status query parameter filtering logic to GET /api/todos in backend/app/routes.py
 - [ ] T027 [US2] Add completion toggle checkbox (completed state visual distinction with strikethrough) to TodoItem in frontend/src/components/TodoItem.tsx
 - [ ] T028 [US2] Create TodoFilter component (All/Active/Completed filter buttons) in frontend/src/components/TodoFilter.tsx
 - [ ] T029 [US2] Integrate TodoFilter into main page and connect filter state to API calls in frontend/src/app/page.tsx

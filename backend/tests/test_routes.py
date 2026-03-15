@@ -273,6 +273,46 @@ class TestUpdateTodo:
         assert update_resp.status_code == 200
         assert update_resp.json()["completed"] is True
 
+    async def test_toggle_completed_true_to_false(
+        self, async_client: httpx.AsyncClient
+    ):
+        """Toggling completed from true back to false returns 200."""
+        create_resp = await async_client.post(
+            "/api/todos", json={"title": "Toggle back"}
+        )
+        todo_id = create_resp.json()["id"]
+
+        # First toggle: false → true
+        await async_client.patch(
+            f"/api/todos/{todo_id}", json={"completed": True}
+        )
+
+        # Second toggle: true → false
+        update_resp = await async_client.patch(
+            f"/api/todos/{todo_id}", json={"completed": False}
+        )
+
+        assert update_resp.status_code == 200
+        assert update_resp.json()["completed"] is False
+
+    async def test_toggle_completed_updates_updated_at(
+        self, async_client: httpx.AsyncClient
+    ):
+        """Toggling completed updates the updated_at timestamp."""
+        create_resp = await async_client.post(
+            "/api/todos", json={"title": "Check timestamp"}
+        )
+        todo = create_resp.json()
+        todo_id = todo["id"]
+        original_updated_at = todo["updated_at"]
+
+        update_resp = await async_client.patch(
+            f"/api/todos/{todo_id}", json={"completed": True}
+        )
+
+        assert update_resp.status_code == 200
+        assert update_resp.json()["updated_at"] >= original_updated_at
+
     async def test_update_nonexistent_todo(
         self, async_client: httpx.AsyncClient
     ):
