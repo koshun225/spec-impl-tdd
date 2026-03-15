@@ -55,17 +55,17 @@ description: "Task list for TODO App feature implementation"
 
 ### Tests for User Story 1 (TDD - write FIRST, ensure they FAIL)
 
-- [ ] T012 [P] [US1] Write Pydantic model validation tests (title required, max 200 chars, empty string rejection, whitespace-only rejection) in backend/tests/test_models.py
-- [ ] T013 [P] [US1] Write API tests for POST /api/todos (create with valid title, reject empty title, reject 201+ char title) in backend/tests/test_routes.py
-- [ ] T014 [P] [US1] Write API tests for GET /api/todos (list all todos, empty list response) in backend/tests/test_routes.py
-- [ ] T015 [P] [US1] Write API tests for PATCH /api/todos/{id} (update title, 404 for non-existent) in backend/tests/test_routes.py
-- [ ] T016 [P] [US1] Write API tests for DELETE /api/todos/{id} (delete existing, 404 for non-existent) in backend/tests/test_routes.py
+- [x] T012 [P] [US1] Write Pydantic model validation tests (title required, max 200 chars, empty string rejection, whitespace-only rejection) in backend/tests/test_models.py
+- [x] T013 [P] [US1] Write API tests for POST /api/todos (create with valid title, reject empty title, reject 201+ char title) in backend/tests/test_routes.py
+- [x] T014 [P] [US1] Write API tests for GET /api/todos (list all todos, empty list response) in backend/tests/test_routes.py
+- [x] T015 [P] [US1] Write API tests for PATCH /api/todos/{id} (update title, 404 for non-existent) in backend/tests/test_routes.py
+- [x] T016 [P] [US1] Write API tests for DELETE /api/todos/{id} (delete existing, 404 for non-existent) in backend/tests/test_routes.py
 
 ### Implementation for User Story 1
 
-- [ ] T017 [US1] Implement CRUD database operations (create, get_all, get_by_id, update, delete) in backend/app/database.py
-- [ ] T018 [US1] Implement API routes for POST /api/todos, GET /api/todos, PATCH /api/todos/{id}, DELETE /api/todos/{id} in backend/app/routes.py
-- [ ] T019 [US1] Register routes in FastAPI app and verify all US1 tests pass in backend/app/main.py
+- [x] T017 [US1] Implement CRUD database operations (create, get_all, get_by_id, update, delete) in backend/app/database.py
+- [x] T018 [US1] Implement API routes for POST /api/todos, GET /api/todos, PATCH /api/todos/{id}, DELETE /api/todos/{id} in backend/app/routes.py
+- [x] T019 [US1] Register routes in FastAPI app and verify all US1 tests pass in backend/app/main.py
 - [ ] T020 [US1] Create TodoForm component (title input, submit button, empty validation error display) in frontend/src/components/TodoForm.tsx
 - [ ] T021 [US1] Create TodoItem component (title display, inline edit on click, delete button with confirmation dialog) in frontend/src/components/TodoItem.tsx
 - [ ] T022 [US1] Create TodoList component (fetch and render todo list, empty state message) in frontend/src/components/TodoList.tsx

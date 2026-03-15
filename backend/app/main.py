@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import init_db, close_db
 from app.logging_config import setup_logging, RequestIdMiddleware
+from app.routes import router
 
 
 @asynccontextmanager
@@ -32,3 +33,5 @@ app.add_middleware(
 )
 
 app.add_middleware(RequestIdMiddleware)
+
+app.include_router(router)

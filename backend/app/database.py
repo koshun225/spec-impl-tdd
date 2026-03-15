@@ -81,3 +81,107 @@ async def close_db() -> None:
     if _connection is not None:
         await _connection.close()
         _connection = None
+
+
+async def create_todo(title: str) -> dict:
+    """Insert a new todo into the database and return it as a dict."""
+    from datetime import datetime, timezone
+
+    now = datetime.now(timezone.utc).isoformat()
+    conn = await get_connection()
+    cursor = await conn.execute(
+        "INSERT INTO todos (title, completed, created_at, updated_at) VALUES (?, ?, ?, ?)",
+        (title, False, now, now),
+    )
+    await conn.commit()
+    todo_id = cursor.lastrowid
+    return {
+        "id": todo_id,
+        "title": title,
+        "completed": False,
+        "created_at": now,
+        "updated_at": now,
+    }
+
+
+async def get_all_todos(status: str = "all") -> list[dict]:
+    """Select todos from the database with optional status filter."""
+    conn = await get_connection()
+    if status == "active":
+        cursor = await conn.execute(
+            "SELECT id, title, completed, created_at, updated_at FROM todos WHERE completed = 0"
+        )
+    elif status == "completed":
+        cursor = await conn.execute(
+            "SELECT id, title, completed, created_at, updated_at FROM todos WHERE completed = 1"
+        )
+    else:
+        cursor = await conn.execute(
+            "SELECT id, title, completed, created_at, updated_at FROM todos"
+        )
+    rows = await cursor.fetchall()
+    return [
+        {
+            "id": row[0],
+            "title": row[1],
+            "completed": bool(row[2]),
+            "created_at": row[3],
+            "updated_at": row[4],
+        }
+        for row in rows
+    ]
+
+
+async def get_todo_by_id(todo_id: int) -> dict | None:
+    """Select a single todo by ID, returning None if not found."""
+    conn = await get_connection()
+    cursor = await conn.execute(
+        "SELECT id, title, completed, created_at, updated_at FROM todos WHERE id = ?",
+        (todo_id,),
+    )
+    row = await cursor.fetchone()
+    if row is None:
+        return None
+    return {
+        "id": row[0],
+        "title": row[1],
+        "completed": bool(row[2]),
+        "created_at": row[3],
+        "updated_at": row[4],
+    }
+
+
+async def update_todo(todo_id: int, title: str | None, completed: bool | None) -> dict | None:
+    """Update a todo's fields and return the updated row, or None if not found."""
+    from datetime import datetime, timezone
+
+    existing = await get_todo_by_id(todo_id)
+    if existing is None:
+        return None
+
+    new_title = title if title is not None else existing["title"]
+    new_completed = completed if completed is not None else existing["completed"]
+    now = datetime.now(timezone.utc).isoformat()
+
+    conn = await get_connection()
+    await conn.execute(
+        "UPDATE todos SET title = ?, completed = ?, updated_at = ? WHERE id = ?",
+        (new_title, new_completed, now, todo_id),
+    )
+    await conn.commit()
+
+    return {
+        "id": todo_id,
+        "title": new_title,
+        "completed": new_completed,
+        "created_at": existing["created_at"],
+        "updated_at": now,
+    }
+
+
+async def delete_todo(todo_id: int) -> bool:
+    """Delete a todo by ID. Return True if a row was deleted, False otherwise."""
+    conn = await get_connection()
+    cursor = await conn.execute("DELETE FROM todos WHERE id = ?", (todo_id,))
+    await conn.commit()
+    return cursor.rowcount > 0
