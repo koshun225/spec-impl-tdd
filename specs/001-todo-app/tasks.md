@@ -101,7 +101,7 @@ description: "Task list for TODO App feature implementation"
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T030 Run mypy --strict on backend/ and fix all type errors
+- [x] T030 Run mypy --strict on backend/ and fix all type errors
 - [ ] T031 [P] Run ruff check and ruff format on backend/ and fix all lint/format issues
 - [ ] T032 [P] Add frontend layout with app title and basic styling in frontend/src/app/layout.tsx
 - [ ] T033 Run quickstart.md verification steps (all 7 steps) end-to-end

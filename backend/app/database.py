@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+from typing import Any
 
 import aiosqlite
 
@@ -83,7 +84,7 @@ async def close_db() -> None:
         _connection = None
 
 
-async def create_todo(title: str) -> dict:
+async def create_todo(title: str) -> dict[str, Any]:
     """Insert a new todo into the database and return it as a dict."""
     from datetime import datetime, timezone
 
@@ -104,7 +105,7 @@ async def create_todo(title: str) -> dict:
     }
 
 
-async def get_all_todos(status: str = "all") -> list[dict]:
+async def get_all_todos(status: str = "all") -> list[dict[str, Any]]:
     """Select todos from the database with optional status filter."""
     conn = await get_connection()
     if status == "active":
@@ -132,7 +133,7 @@ async def get_all_todos(status: str = "all") -> list[dict]:
     ]
 
 
-async def get_todo_by_id(todo_id: int) -> dict | None:
+async def get_todo_by_id(todo_id: int) -> dict[str, Any] | None:
     """Select a single todo by ID, returning None if not found."""
     conn = await get_connection()
     cursor = await conn.execute(
@@ -151,7 +152,7 @@ async def get_todo_by_id(todo_id: int) -> dict | None:
     }
 
 
-async def update_todo(todo_id: int, title: str | None, completed: bool | None) -> dict | None:
+async def update_todo(todo_id: int, title: str | None, completed: bool | None) -> dict[str, Any] | None:
     """Update a todo's fields and return the updated row, or None if not found."""
     from datetime import datetime, timezone
 
