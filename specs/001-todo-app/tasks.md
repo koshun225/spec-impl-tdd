@@ -90,7 +90,7 @@ description: "Task list for TODO App feature implementation"
 
 - [x] T026 [US2] Add status query parameter filtering logic to GET /api/todos in backend/app/routes.py
 - [x] T027 [US2] Add completion toggle checkbox (completed state visual distinction with strikethrough) to TodoItem in frontend/src/components/TodoItem.tsx
-- [ ] T028 [US2] Create TodoFilter component (All/Active/Completed filter buttons) in frontend/src/components/TodoFilter.tsx
+- [x] T028 [US2] Create TodoFilter component (All/Active/Completed filter buttons) in frontend/src/components/TodoFilter.tsx
 - [ ] T029 [US2] Integrate TodoFilter into main page and connect filter state to API calls in frontend/src/app/page.tsx
 
 **Checkpoint**: All user stories should now be independently functional
