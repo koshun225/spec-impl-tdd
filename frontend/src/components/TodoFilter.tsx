@@ -15,7 +15,7 @@ const FILTER_OPTIONS: { label: string; value: FilterStatus }[] = [
 
 export default function TodoFilter({ currentFilter, onFilterChange }: TodoFilterProps) {
   return (
-    <div>
+    <nav>
       {FILTER_OPTIONS.map(({ label, value }) => (
         <button
           key={value}
@@ -25,6 +25,6 @@ export default function TodoFilter({ currentFilter, onFilterChange }: TodoFilter
           {label}
         </button>
       ))}
-    </div>
+    </nav>
   );
 }

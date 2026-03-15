@@ -103,7 +103,7 @@ description: "Task list for TODO App feature implementation"
 
 - [x] T030 Run mypy --strict on backend/ and fix all type errors
 - [x] T031 [P] Run ruff check and ruff format on backend/ and fix all lint/format issues
-- [ ] T032 [P] Add frontend layout with app title and basic styling in frontend/src/app/layout.tsx
+- [x] T032 [P] Add frontend layout with app title and basic styling in frontend/src/app/layout.tsx
 - [ ] T033 Run quickstart.md verification steps (all 7 steps) end-to-end
 
 ---
