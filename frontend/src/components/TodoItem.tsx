@@ -57,6 +57,11 @@ export default function TodoItem({ todo, onUpdated, onDeleted }: TodoItemProps) 
     setIsEditing(true);
   };
 
+  const handleToggleCompleted = async () => {
+    const updated = await updateTodo(todo.id, { completed: !todo.completed });
+    onUpdated(updated);
+  };
+
   const handleDelete = async () => {
     const confirmed = window.confirm("本当に削除しますか？");
     if (!confirmed) {
@@ -68,6 +73,11 @@ export default function TodoItem({ todo, onUpdated, onDeleted }: TodoItemProps) 
 
   return (
     <li>
+      <input
+        type="checkbox"
+        checked={todo.completed}
+        onChange={handleToggleCompleted}
+      />
       {isEditing ? (
         <input
           ref={inputRef}
