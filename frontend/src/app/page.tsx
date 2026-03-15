@@ -4,9 +4,11 @@ import { useState, useEffect } from "react";
 import { fetchTodos, type Todo } from "../lib/api";
 import TodoForm from "../components/TodoForm";
 import TodoList from "../components/TodoList";
+import TodoFilter, { type FilterStatus } from "../components/TodoFilter";
 
 export default function Home() {
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [filter, setFilter] = useState<FilterStatus>("all");
 
   useEffect(() => {
     fetchTodos().then((response) => {
@@ -14,8 +16,17 @@ export default function Home() {
     });
   }, []);
 
-  const handleCreated = (todo: Todo) => {
-    setTodos((prev) => [...prev, todo]);
+  const handleFilterChange = (newFilter: FilterStatus) => {
+    setFilter(newFilter);
+    fetchTodos(newFilter).then((response) => {
+      setTodos(response.todos);
+    });
+  };
+
+  const handleCreated = (_todo: Todo) => {
+    fetchTodos(filter).then((response) => {
+      setTodos(response.todos);
+    });
   };
 
   const handleUpdated = (updatedTodo: Todo) => {
@@ -32,6 +43,7 @@ export default function Home() {
     <main>
       <h1>TODO App</h1>
       <TodoForm onCreated={handleCreated} />
+      <TodoFilter currentFilter={filter} onFilterChange={handleFilterChange} />
       <TodoList todos={todos} onUpdated={handleUpdated} onDeleted={handleDeleted} />
     </main>
   );

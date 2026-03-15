@@ -19,6 +19,10 @@ const mockedFetchTodos = fetchTodos as jest.MockedFunction<typeof fetchTodos>;
 
 // Capture the latest props passed to each mock so tests can invoke callbacks.
 let capturedTodoFormProps: { onCreated: (todo: Todo) => void } | null = null;
+let capturedTodoFilterProps: {
+  currentFilter: "all" | "active" | "completed";
+  onFilterChange: (status: "all" | "active" | "completed") => void;
+} | null = null;
 let capturedTodoListProps: {
   todos: Todo[];
   onUpdated: (todo: Todo) => void;
@@ -49,6 +53,39 @@ jest.mock("@/components/TodoForm", () => {
   };
   MockTodoForm.displayName = "MockTodoForm";
   return { __esModule: true, default: MockTodoForm };
+});
+
+jest.mock("@/components/TodoFilter", () => {
+  const MockTodoFilter = (props: {
+    currentFilter: "all" | "active" | "completed";
+    onFilterChange: (status: "all" | "active" | "completed") => void;
+  }) => {
+    capturedTodoFilterProps = props;
+    return (
+      <div data-testid="todo-filter">
+        <button
+          data-testid="filter-all"
+          onClick={() => props.onFilterChange("all")}
+        >
+          全件
+        </button>
+        <button
+          data-testid="filter-active"
+          onClick={() => props.onFilterChange("active")}
+        >
+          未完了
+        </button>
+        <button
+          data-testid="filter-completed"
+          onClick={() => props.onFilterChange("completed")}
+        >
+          完了済み
+        </button>
+      </div>
+    );
+  };
+  MockTodoFilter.displayName = "MockTodoFilter";
+  return { __esModule: true, default: MockTodoFilter };
 });
 
 jest.mock("@/components/TodoList", () => {
@@ -100,6 +137,7 @@ describe("Home page (T023)", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     capturedTodoFormProps = null;
+    capturedTodoFilterProps = null;
     capturedTodoListProps = null;
     // Default: fetchTodos resolves with empty list
     mockedFetchTodos.mockResolvedValue(buildTodoListResponse([]));
@@ -208,8 +246,11 @@ describe("Home page (T023)", () => {
 
       const newTodo = buildTodo({ id: 99, title: "New from form" });
 
+      // After create, the page re-fetches todos — mock the re-fetch response
+      mockedFetchTodos.mockResolvedValue(buildTodoListResponse([newTodo]));
+
       // Simulate TodoForm calling onCreated
-      act(() => {
+      await act(async () => {
         capturedTodoFormProps!.onCreated(newTodo);
       });
 
@@ -237,7 +278,12 @@ describe("Home page (T023)", () => {
 
       const newTodo = buildTodo({ id: 2, title: "追加されたTODO" });
 
-      act(() => {
+      // After create, the page re-fetches todos — mock the re-fetch response
+      mockedFetchTodos.mockResolvedValue(
+        buildTodoListResponse([...existingTodos, newTodo])
+      );
+
+      await act(async () => {
         capturedTodoFormProps!.onCreated(newTodo);
       });
 
@@ -387,7 +433,10 @@ describe("Home page (T023)", () => {
       // Simulate user creating a new todo via TodoForm
       const createdTodo = buildTodo({ id: 42, title: "買い物に行く" });
 
-      act(() => {
+      // After create, the page re-fetches todos — mock the re-fetch response
+      mockedFetchTodos.mockResolvedValue(buildTodoListResponse([createdTodo]));
+
+      await act(async () => {
         capturedTodoFormProps!.onCreated(createdTodo);
       });
 
@@ -422,6 +471,187 @@ describe("Home page (T023)", () => {
         expect(capturedTodoListProps!.todos[0].title).toBe("買い物に行く");
         expect(capturedTodoListProps!.todos[1].title).toBe("レポートを書く");
         expect(capturedTodoListProps!.todos[2].title).toBe("運動する");
+      });
+    });
+  });
+
+  // ---------- Filter integration (T029) ----------
+
+  describe("Filter integration (T029)", () => {
+    it("renders the TodoFilter component on the page", async () => {
+      await act(async () => {
+        render(<Home />);
+      });
+
+      expect(screen.getByTestId("todo-filter")).toBeInTheDocument();
+    });
+
+    it('default filter is "all" — fetchTodos is called with default (no filter or "all")', async () => {
+      await act(async () => {
+        render(<Home />);
+      });
+
+      // fetchTodos should have been called once on mount
+      expect(mockedFetchTodos).toHaveBeenCalledTimes(1);
+      // Called with no arguments or "all"
+      const callArgs = mockedFetchTodos.mock.calls[0];
+      expect(callArgs.length === 0 || callArgs[0] === "all").toBe(true);
+
+      // TodoFilter should receive currentFilter="all"
+      expect(capturedTodoFilterProps).not.toBeNull();
+      expect(capturedTodoFilterProps!.currentFilter).toBe("all");
+    });
+
+    it('clicking "未完了" filter button triggers fetchTodos with status="active"', async () => {
+      const allTodos = [
+        buildTodo({ id: 1, title: "TODO 1", completed: false }),
+        buildTodo({ id: 2, title: "TODO 2", completed: true }),
+      ];
+      mockedFetchTodos.mockResolvedValue(buildTodoListResponse(allTodos));
+
+      await act(async () => {
+        render(<Home />);
+      });
+
+      // Wait for initial load
+      await waitFor(() => {
+        expect(mockedFetchTodos).toHaveBeenCalledTimes(1);
+      });
+
+      // Setup mock for filtered response
+      const activeTodos = [
+        buildTodo({ id: 1, title: "TODO 1", completed: false }),
+      ];
+      mockedFetchTodos.mockResolvedValue(buildTodoListResponse(activeTodos));
+
+      // Click the "未完了" filter button
+      const user = userEvent.setup();
+      await user.click(screen.getByTestId("filter-active"));
+
+      // fetchTodos should be called again with "active"
+      await waitFor(() => {
+        expect(mockedFetchTodos).toHaveBeenCalledWith("active");
+      });
+
+      // TodoFilter should reflect the new filter state
+      await waitFor(() => {
+        expect(capturedTodoFilterProps!.currentFilter).toBe("active");
+      });
+    });
+
+    it('clicking "完了済み" filter button triggers fetchTodos with status="completed"', async () => {
+      mockedFetchTodos.mockResolvedValue(buildTodoListResponse([]));
+
+      await act(async () => {
+        render(<Home />);
+      });
+
+      await waitFor(() => {
+        expect(mockedFetchTodos).toHaveBeenCalledTimes(1);
+      });
+
+      const completedTodos = [
+        buildTodo({ id: 2, title: "完了TODO", completed: true }),
+      ];
+      mockedFetchTodos.mockResolvedValue(buildTodoListResponse(completedTodos));
+
+      const user = userEvent.setup();
+      await user.click(screen.getByTestId("filter-completed"));
+
+      await waitFor(() => {
+        expect(mockedFetchTodos).toHaveBeenCalledWith("completed");
+      });
+
+      await waitFor(() => {
+        expect(capturedTodoFilterProps!.currentFilter).toBe("completed");
+      });
+    });
+
+    it('clicking "全件" filter button after filtering triggers fetchTodos with default', async () => {
+      mockedFetchTodos.mockResolvedValue(buildTodoListResponse([]));
+
+      await act(async () => {
+        render(<Home />);
+      });
+
+      await waitFor(() => {
+        expect(mockedFetchTodos).toHaveBeenCalledTimes(1);
+      });
+
+      // First, switch to "active" filter
+      mockedFetchTodos.mockResolvedValue(buildTodoListResponse([]));
+      const user = userEvent.setup();
+      await user.click(screen.getByTestId("filter-active"));
+
+      await waitFor(() => {
+        expect(mockedFetchTodos).toHaveBeenCalledWith("active");
+      });
+
+      // Now switch back to "all"
+      const allTodos = [
+        buildTodo({ id: 1, title: "TODO 1", completed: false }),
+        buildTodo({ id: 2, title: "TODO 2", completed: true }),
+      ];
+      mockedFetchTodos.mockResolvedValue(buildTodoListResponse(allTodos));
+
+      await user.click(screen.getByTestId("filter-all"));
+
+      // fetchTodos should be called with "all" or no argument
+      await waitFor(() => {
+        const lastCall = mockedFetchTodos.mock.calls[mockedFetchTodos.mock.calls.length - 1];
+        expect(lastCall[0] === "all" || lastCall[0] === undefined).toBe(true);
+      });
+
+      await waitFor(() => {
+        expect(capturedTodoFilterProps!.currentFilter).toBe("all");
+      });
+    });
+
+    it("after adding a new todo while filter is active, fetchTodos is re-called with current filter", async () => {
+      // Start with some todos
+      const initialTodos = [
+        buildTodo({ id: 1, title: "既存の未完了TODO", completed: false }),
+      ];
+      mockedFetchTodos.mockResolvedValue(buildTodoListResponse(initialTodos));
+
+      await act(async () => {
+        render(<Home />);
+      });
+
+      await waitFor(() => {
+        expect(mockedFetchTodos).toHaveBeenCalledTimes(1);
+      });
+
+      // Switch to "active" filter
+      mockedFetchTodos.mockResolvedValue(buildTodoListResponse(initialTodos));
+      const user = userEvent.setup();
+      await user.click(screen.getByTestId("filter-active"));
+
+      await waitFor(() => {
+        expect(mockedFetchTodos).toHaveBeenCalledWith("active");
+      });
+
+      // Clear mock to track only new calls
+      mockedFetchTodos.mockClear();
+
+      // Setup the response for after adding a todo (re-fetch with filter)
+      const updatedActiveTodos = [
+        buildTodo({ id: 1, title: "既存の未完了TODO", completed: false }),
+        buildTodo({ id: 99, title: "New from form", completed: false }),
+      ];
+      mockedFetchTodos.mockResolvedValue(buildTodoListResponse(updatedActiveTodos));
+
+      // Simulate adding a new todo via TodoForm's onCreated callback
+      await act(async () => {
+        capturedTodoFormProps!.onCreated(
+          buildTodo({ id: 99, title: "New from form", completed: false })
+        );
+      });
+
+      // After creating a todo while a filter is active, fetchTodos should be
+      // re-called with the current filter to get the correct filtered list
+      await waitFor(() => {
+        expect(mockedFetchTodos).toHaveBeenCalledWith("active");
       });
     });
   });
